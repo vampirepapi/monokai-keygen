@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monokai Pro License Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            width: 300px;
+        }
+
+        .card-header {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-content label {
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .card-content input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card-content button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            Monokai Pro License Generator
+        </div>
+        <div class="card-content">
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" placeholder="Enter your email">
+            <button onclick="generateSublimeLicense()">Generate Sublime License</button>
+            <button onclick="generateVSCodeLicense()">Generate VS Code License</button>
+            <div id="results"></div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <script>
+        const UUID = 'fd330f6f-3f41-421d-9fe5-de742d0c54c0';
+
+        function generateMD5(str) {
+            return CryptoJS.MD5(str).toString();
+        }
+
+        function formatLicense(hash) {
+            const first25 = hash.substring(0, 25);
+            return first25.match(/.{5}/g).join('-');
+        }
+
+        function generateSublimeLicense() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                alert('Please enter an email address.');
+                return;
+            }
+            const hash = generateMD5(email);
+            const license = formatLicense(hash);
+            displayResult(email, license, 'Sublime Text');
+        }
+
+        function generateVSCodeLicense() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                alert('Please enter an email address.');
+                return;
+            }
+            const hash = generateMD5(UUID + email);
+            const license = formatLicense(hash);
+            displayResult(email, license, 'VS Code');
+        }
+
+        function displayResult(email, license, editor) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `<p><strong>${editor} License:</strong></p>
+                                    <p>Email: ${email}</p>
+                                    <p>License Key: ${license}</p>`;
+        }
+    </script>
+</body>
+</html>
